@@ -31,7 +31,15 @@ public class Main {
                 String winner = game.play();
 
                 boolean draw = game.getStatus().equals("DRAW");
-                scoreboard.addGameResult(playerA, playerB, draw);
+
+                // ✅ Corrección: registrar ganador real
+                if (draw) {
+                    scoreboard.addGameResult(playerA, playerB, true);
+                } else if (winner.equals(playerA)) {
+                    scoreboard.addGameResult(playerA, playerB, false);
+                } else {
+                    scoreboard.addGameResult(playerB, playerA, false);
+                }
 
             } else if (opcion == 2) {
                 System.out.print("Ingrese mínimo de victorias: ");
@@ -40,8 +48,12 @@ public class Main {
                 int hi = scanner.nextInt();
                 Player[] players = scoreboard.winRange(lo, hi);
                 System.out.println("Jugadores en rango:");
+
+                // ✅ Corrección: mensaje formateado correctamente
                 for (Player p : players) {
-                    System.out.println(p.getPlayerName() + " - Wins: " + p.getWins());
+                    int wins = p.getWins();
+                    String victoriaTexto = (wins == 1) ? "victoria" : "victorias";
+                    System.out.println("- " + p.getPlayerName() + ": " + wins + " " + victoriaTexto);
                 }
 
             } else if (opcion == 3) {
@@ -56,25 +68,22 @@ public class Main {
                         System.out.println(p.getPlayerName() + " - Wins: " + p.getWins());
                     }
                 }
-            }
-            else if (opcion == 4) {
+            } else if (opcion == 4) {
                 System.out.print("Ingrese nombre del jugador: ");
-                    String name = scanner.nextLine();
-                    if (scoreboard.checkPlayer(name)) {
-                        System.out.println("Jugador no registrado.");
-                    } else {
-                        Player p = scoreboard.getPlayer(name);
-                        System.out.println("Estadísticas de " + name + ":");
-                        System.out.println("  Ganadas: " + p.getWins());
-                        System.out.println("  Empatadas: " + p.getDraws());
-                        System.out.println("  Perdidas: " + p.getLosses());
-                        System.out.printf("  Win Rate: %.2f%%\n", p.winRate() * 100);
-                    }
-            }
-            else if (opcion == 5) {
+                String name = scanner.nextLine();
+                if (scoreboard.checkPlayer(name)) {
+                    System.out.println("Jugador no registrado.");
+                } else {
+                    Player p = scoreboard.getPlayer(name);
+                    System.out.println("Estadísticas de " + name + ":");
+                    System.out.println("  Ganadas: " + p.getWins());
+                    System.out.println("  Empatadas: " + p.getDraws());
+                    System.out.println("  Perdidas: " + p.getLosses());
+                    System.out.printf("  Win Rate: %.2f%%\n", p.winRate() * 100);
+                }
+            } else if (opcion == 5) {
                 System.out.println("Total de partidas jugadas: " + scoreboard.getTotalGames());
-            }
-            else if (opcion == 6) {
+            } else if (opcion == 6) {
                 System.out.println("Gracias por jugar. ¡Hasta la próxima!");
                 break;
             } else {

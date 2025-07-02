@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Scoreboard {
     private BST<Integer, String> winTree;
@@ -44,8 +45,9 @@ public class Scoreboard {
 
     public Player[] winRange(int lo, int hi) {
         ArrayList<String> names = winTree.range(lo, hi);
+        HashSet<String> uniqueNames = new HashSet<>(names);
         ArrayList<Player> result = new ArrayList<>();
-        for (String name : names) {
+        for (String name : uniqueNames) {
             Player p = players.get(name);
             if (p != null) result.add(p);
         }
@@ -54,13 +56,15 @@ public class Scoreboard {
 
     public Player[] winSuccessor(int wins) {
         ArrayList<String> names = winTree.successor(wins);
+        HashSet<String> uniqueNames = new HashSet<>(names);
         ArrayList<Player> result = new ArrayList<>();
-        for (String name : names) {
+        for (String name : uniqueNames) {
             Player p = players.get(name);
             if (p != null) result.add(p);
         }
         return result.toArray(new Player[0]);
     }
+
     public int getTotalGames() {
         return playedGames;
     }
@@ -68,5 +72,4 @@ public class Scoreboard {
     public Player getPlayer(String name) {
         return players.get(name);
     }
-
 }
